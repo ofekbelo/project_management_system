@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
 import bcrypt from 'bcrypt'
 import { UserStatus } from "../types/user.types";
+import { validateEmail, validateName, validatePassword } from "../validations/authValidations";
 
 export class AuthController {
     private userService: UserService;
@@ -22,6 +23,18 @@ export class AuthController {
             const userExist = await this.userService.getUserByEmail(email);
             if (userExist) {
                 res.status(409).json({ success: false, message: "This email is already exist. Plase make the registration with other email." })
+            }
+
+            if (!validatePassword(password)) {
+                res.status(400).json({ success: false, message: "Your password is not valid. Please type valid password." });
+            }
+
+            if (!(await validateEmail(email))) {
+                res.status(400).json({ success: false, message: "Your email is not valid." });
+            }
+
+            if (!validateName(firstName) || !validateName(lastName)) {
+                res.status(400).json({ success: false, message: "Your firstname or lastname is not valid." });
             }
 
             const saltRounds = 10;

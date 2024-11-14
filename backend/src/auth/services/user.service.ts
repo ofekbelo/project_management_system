@@ -1,4 +1,5 @@
 import Users, { IUser } from "../models/user.model";
+import { UserStatus } from "../types/user.types";
 
 export class UserService {
     public async getAllUser(): Promise<IUser[]> {
@@ -12,5 +13,9 @@ export class UserService {
 
     public async getUserByEmail(email: string): Promise<IUser | null> {
         return await Users.findOne({ email: email })
+    }
+
+    public async getPendingApprovalUsers(): Promise<IUser[] | null> {
+        return await Users.find({ status: UserStatus.PENDING_APPROVAL });
     }
 }

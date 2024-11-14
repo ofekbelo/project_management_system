@@ -17,7 +17,7 @@ if (!PORT) {
 app.use(express.json());
 
 // Routes
-app.use('/api', authRouter);
+app.use('/api/auth', authRouter);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
