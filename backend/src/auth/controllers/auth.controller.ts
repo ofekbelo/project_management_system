@@ -17,7 +17,6 @@ export class AuthController {
 
             if (!email || !password || !firstName || !lastName) {
                 res.status(400).json({ suceess: false, message: "One or more of the fields are empty." })
-                return;
             }
 
             const userExist = await this.userService.getUserByEmail(email);
@@ -49,10 +48,26 @@ export class AuthController {
                 role: null,
                 status: UserStatus.PENDING_APPROVAL
             });
-            res.status(201).json({ isSuccess: true, userId: newUser._id, message: "SUCCESSS" })
+            res.status(201).json({ success: true, userId: newUser._id, message: "SUCCESSS" })
         }
         catch {
+            res.status(500).json({ success: false, message: "Server error. Please try again later." })
+        }
+    }
 
+    public approveUser = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { userId, role, department, reportingTo } = req.body;
+
+            if (!userId || !role || !department || !reportingTo) {
+                res.status(400).json({ success: false, message: "One or more of the fields are empty." });
+            }
+
+            await this.userService.approveUserById(userId, role, department, reportingTo);
+            res.status(201).json({ success: true, user: await this.userService.getUserById(userId), message: "SUCCESS" });
+        }
+        catch {
+            res.status(500).json({ success: false, message: "Server error. Please try again later." });
         }
     }
 }

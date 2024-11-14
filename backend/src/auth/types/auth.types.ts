@@ -23,5 +23,6 @@ export interface UserApprovalRequest {
 
 export interface UserApprovalResponse {
     success: boolean;
-    user: Omit<IUser, "password">;
+    user?: Omit<IUser, "password">;
+    message: string;
 }

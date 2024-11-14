@@ -1,5 +1,5 @@
 import Users, { IUser } from "../models/user.model";
-import { UserStatus } from "../types/user.types";
+import { UserRole, UserStatus } from "../types/user.types";
 
 export class UserService {
     public async getAllUser(): Promise<IUser[]> {
@@ -15,7 +15,15 @@ export class UserService {
         return await Users.findOne({ email: email })
     }
 
+    public async getUserById(userId: string): Promise<IUser | null> {
+        return await Users.findOne({ _id: userId })
+    }
+
     public async getPendingApprovalUsers(): Promise<IUser[] | null> {
         return await Users.find({ status: UserStatus.PENDING_APPROVAL });
+    }
+
+    public async approveUserById(userId: string, role: UserRole, department: string, reportingTo: string): Promise<void> {
+        await Users.findByIdAndUpdate(userId, { role, department, reportingTo, status: UserStatus.ACTIVE });
     }
 }
