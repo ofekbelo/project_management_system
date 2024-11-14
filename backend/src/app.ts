@@ -9,6 +9,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
+if (!PORT) {
+    throw new Error('Port is not exist.');
+}
+
 // Middleware
 app.use(express.json());
 
