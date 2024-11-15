@@ -12,7 +12,11 @@ export class UserService {
     }
 
     public async getUserByEmail(email: string): Promise<IUser | null> {
-        return await Users.findOne({ email: email })
+        return await Users.findOne({ email })
+    }
+
+    public async getUserByEmailAndPassword(email: string, password: string): Promise<IUser | null> {
+        return await Users.findOne({ email, password });
     }
 
     public async getUserById(userId: string): Promise<IUser | null> {
